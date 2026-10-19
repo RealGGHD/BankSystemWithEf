@@ -1,5 +1,6 @@
 using System.Globalization;
 using BankSystem.Services.Generators;
+using BankSystem.Services.Helpers;
 
 namespace BankSystem.Services.Models.Accounts;
 
@@ -19,8 +20,7 @@ public abstract class BankAccount
         ArgumentNullException.ThrowIfNull(owner);
         ArgumentNullException.ThrowIfNull(numberGenerator);
 
-        // TODO: also check currencyCode.IsCurrencyValid() (ValidationService).
-        if (string.IsNullOrWhiteSpace(currencyCode))
+        if (string.IsNullOrWhiteSpace(currencyCode) || !currencyCode.IsCurrencyValid())
         {
             throw new ArgumentException("Currency code is invalid.", nameof(currencyCode));
         }

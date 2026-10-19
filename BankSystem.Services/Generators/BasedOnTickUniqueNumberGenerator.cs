@@ -1,3 +1,6 @@
+using System.Globalization;
+using BankSystem.Services.Helpers;
+
 namespace BankSystem.Services.Generators;
 
 /// <summary>
@@ -20,7 +23,8 @@ public class BasedOnTickUniqueNumberGenerator : IUniqueNumberGenerator
     /// </summary>
     public string Generate()
     {
-        // TODO: hash the ticks elapsed from startingPoint to now (CryptoHelper.GenerateHash).
-        throw new NotImplementedException();
+        // Taken on every call, so consecutive calls get different values.
+        long elapsedTicks = (DateTime.Now - this.startingPoint).Ticks;
+        return elapsedTicks.ToString(CultureInfo.InvariantCulture).GenerateHash();
     }
 }

@@ -1,4 +1,5 @@
 using System.Globalization;
+using BankSystem.Services.Helpers;
 
 namespace BankSystem.Services.Generators;
 
@@ -32,8 +33,6 @@ public class SimpleGenerator : IUniqueNumberGenerator
     public string Generate()
     {
         this.counter += 1;
-        //this.counter.ToString(CultureInfo.InvariantCulture).GenerateHash();
-        // TODO: increment the counter and return its hash (CryptoHelper.GenerateHash).
-        throw new NotImplementedException();
+        return this.counter.ToString(CultureInfo.InvariantCulture).GenerateHash();
     }
 }

@@ -1,3 +1,5 @@
+using BankSystem.Services.Helpers;
+
 namespace BankSystem.Services.Generators;
 
 /// <summary>
@@ -10,7 +12,6 @@ public class GuidNumberGenerator : IUniqueNumberGenerator
     /// </summary>
     public string Generate()
     {
-        // TODO: generate a GUID and hash it with CryptoHelper.GenerateHash.
-        throw new NotImplementedException();
+        return Guid.NewGuid().ToString().GenerateHash();
     }
 }

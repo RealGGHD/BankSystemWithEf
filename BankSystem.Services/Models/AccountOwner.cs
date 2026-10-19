@@ -1,11 +1,15 @@
+using BankSystem.Services.Helpers;
 using BankSystem.Services.Models.Accounts;
 
 namespace BankSystem.Services.Models;
+
 /// <summary>
 /// Represents a bank account owner.
 /// </summary>
 public class AccountOwner
 {
+    private readonly List<BankAccount> accounts = new();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="AccountOwner"/> class.
     /// </summary>
@@ -59,8 +63,12 @@ public class AccountOwner
         get;
         set
         {
-            // TODO: throw ArgumentException when the email is not valid (ValidationService.IsEmailValid).
-            throw new NotImplementedException();
+            if (!value.IsEmailValid())
+            {
+                throw new ArgumentException("Email is not valid.", nameof(value));
+            }
+
+            field = value;
         }
     }
 
@@ -77,7 +85,10 @@ public class AccountOwner
     /// </summary>
     public void Add(BankAccount account)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(account);
+
+        // No duplicate check: the account constructor already registers itself.
+        this.accounts.Add(account);
     }
 
     /// <summary>
@@ -85,6 +96,6 @@ public class AccountOwner
     /// </summary>
     public IList<BankAccount> Accounts()
     {
-        throw new NotImplementedException();
+        return this.accounts;
     }
 }
