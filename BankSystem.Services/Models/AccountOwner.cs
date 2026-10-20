@@ -10,20 +10,13 @@ public class AccountOwner
 {
     private readonly List<BankAccount> accounts = new();
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AccountOwner"/> class.
-    /// </summary>
     public AccountOwner(string firstName, string lastName, string email)
     {
-        // Assigning through properties so the same validation runs here.
         this.FirstName = firstName;
         this.LastName = lastName;
         this.Email = email;
     }
 
-    /// <summary>
-    /// Gets or sets the first name of the owner.
-    /// </summary>
     public string FirstName
     {
         get;
@@ -38,9 +31,6 @@ public class AccountOwner
         }
     }
 
-    /// <summary>
-    /// Gets or sets the last name of the owner.
-    /// </summary>
     public string LastName
     {
         get;
@@ -55,9 +45,6 @@ public class AccountOwner
         }
     }
 
-    /// <summary>
-    /// Gets or sets the email address of the owner.
-    /// </summary>
     public string Email
     {
         get;
@@ -72,17 +59,13 @@ public class AccountOwner
         }
     }
 
-    /// <summary>
-    /// Returns the owner's full name and email.
-    /// </summary>
+    // Returns the owner's full name and email.
     public override string ToString()
     {
         return $"{this.FirstName} {this.LastName}, {this.Email}.";
     }
 
-    /// <summary>
-    /// Adds an account to the owner's accounts.
-    /// </summary>
+    // Adds an account to the owner's accounts.
     public void Add(BankAccount account)
     {
         ArgumentNullException.ThrowIfNull(account);
@@ -91,9 +74,7 @@ public class AccountOwner
         this.accounts.Add(account);
     }
 
-    /// <summary>
-    /// Returns the owner's accounts.
-    /// </summary>
+    // Returns the owner's accounts.
     public IList<BankAccount> Accounts()
     {
         return this.accounts;
