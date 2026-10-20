@@ -7,11 +7,11 @@ namespace BankSystem.Services.Generators;
 /// </summary>
 public class GuidNumberGenerator : IUniqueNumberGenerator
 {
-    /// <summary>
-    /// Generates a unique number as a hash of a new GUID.
-    /// </summary>
+    // Generates a unique number as a hash of a new GUID.
     public string Generate()
     {
-        return Guid.NewGuid().ToString().GenerateHash();
+        string answer = Guid.NewGuid().ToString().GenerateHash();
+
+        return answer;
     }
 }

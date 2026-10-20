@@ -5,8 +5,6 @@ namespace BankSystem.Services.Generators;
 /// </summary>
 public interface IUniqueNumberGenerator
 {
-    /// <summary>
-    /// Generates a string that represents a unique number.
-    /// </summary>
+    // Generates a string that represents a unique number.
     string Generate();
 }
