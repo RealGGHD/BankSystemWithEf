@@ -11,52 +11,44 @@ public class SilverAccount : BankAccount
     private const int SilverWithdrawCostPerPoint = 2;
     private const int SilverBalanceCostPerPoint = 100;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SilverAccount"/> class.
-    /// </summary>
     public SilverAccount(AccountOwner owner, string currencyCode, IUniqueNumberGenerator uniqueNumberGenerator)
         : base(owner, currencyCode, uniqueNumberGenerator)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SilverAccount"/> class.
-    /// </summary>
     public SilverAccount(AccountOwner owner, string currencyCode, Func<string> numberGenerator)
         : base(owner, currencyCode, numberGenerator)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SilverAccount"/> class with an initial balance.
-    /// </summary>
     public SilverAccount(AccountOwner owner, string currencyCode, IUniqueNumberGenerator uniqueNumberGenerator, decimal initialBalance)
         : base(owner, currencyCode, uniqueNumberGenerator, initialBalance)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SilverAccount"/> class with an initial balance.
-    /// </summary>
     public SilverAccount(AccountOwner owner, string currencyCode, Func<string> numberGenerator, decimal initialBalance)
         : base(owner, currencyCode, numberGenerator, initialBalance)
     {
     }
 
-    /// <summary>
-    /// Gets the overdraft limit. Equals 2 * BonusPoints.
-    /// </summary>
+    // Gets the overdraft limit. Equals 2 * BonusPoints.
     protected override decimal Overdraft => 2 * this.BonusPoints;
 
-    /// <summary>
-    /// Calculates bonus points for a deposit based on the balance and the deposit amount.
-    /// </summary>
     protected override int CalculateDepositRewardPoints(decimal amount)
-        => (int)Math.Max(Math.Floor((this.Balance / SilverBalanceCostPerPoint) + (amount / SilverDepositCostPerPoint)), 0);
+    {
+        return this.CalculatePoints(amount, SilverDepositCostPerPoint);
+    }
 
-    /// <summary>
-    /// Calculates bonus points for a withdrawal based on the balance and the withdrawal amount.
-    /// </summary>
     protected override int CalculateWithdrawRewardPoints(decimal amount)
-        => (int)Math.Max(Math.Floor((this.Balance / SilverBalanceCostPerPoint) + (amount / SilverWithdrawCostPerPoint)), 0);
+    {
+        return this.CalculatePoints(amount, SilverWithdrawCostPerPoint);
+    }
+
+    // Silver points depend on the balance and the operation amount.
+    private int CalculatePoints(decimal amount, int amountCostPerPoint)
+    {
+        decimal answer = Math.Max(Math.Floor((this.Balance / SilverBalanceCostPerPoint) + (amount / amountCostPerPoint)), 0);
+
+        return (int)answer;
+    }
 }
