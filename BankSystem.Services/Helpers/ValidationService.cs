@@ -8,9 +8,7 @@ namespace BankSystem.Services.Helpers;
 /// </summary>
 public static class ValidationService
 {
-    /// <summary>
-    /// Checks whether the string is an existing ISO currency code.
-    /// </summary>
+    // Checks whether the string is an existing ISO currency code.
     public static bool IsCurrencyValid(this string currencyCode)
     {
         if (currencyCode is null)
@@ -31,9 +29,7 @@ public static class ValidationService
         return false;
     }
 
-    /// <summary>
-    /// Checks whether the string is a valid email address.
-    /// </summary>
+    // Checks whether the string is a valid email address.
     public static bool IsEmailValid(this string email)
     {
         if (email is null)
