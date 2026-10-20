@@ -23,12 +23,23 @@ public class AccountCashOperation
     // Returns a text description of the operation.
     public override string ToString()
     {
+        string message;
+
         // Negative amount is a debit; positive or zero is a credit.
-        string message = this.Amount < 0 ? "Debited from account" : "Credited to account";
+        if (this.Amount < 0)
+        {
+            message = "Debited from account";
+        }
+        else
+        {
+            message = "Credited to account";
+        }
 
         // Invariant culture keeps "/" in the date and "." in decimals.
-        return string.Create(
+        string answer = string.Create(
             CultureInfo.InvariantCulture,
             $"{this.Date:MM/dd/yyyy HH:mm:ss} {this.Note} : {message} {this.Amount}.");
+
+        return answer;
     }
 }
