@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankSystem.EF.Entities;
 
+/// <summary>
+/// Represents a row of the bank_account table.
+/// </summary>
 [Table("bank_account")]
 public class BankAccount
 {
@@ -31,6 +34,7 @@ public class BankAccount
     [Column("overdraft")]
     public decimal Overdraft { get; set; }
 
+    // Navigations for the two foreign keys above (not columns).
     public AccountOwner AccountOwner { get; set; }
 
     public CurrencyCode CurrencyCode { get; set; }

@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankSystem.EF.Entities;
 
+/// <summary>
+/// Represents a row of the account_owner table.
+/// </summary>
 [Table("account_owner")]
 public class AccountOwner
 {
@@ -19,5 +22,6 @@ public class AccountOwner
     [Column("email")]
     public string Email { get; set; }
 
+    // Navigation to all accounts of this owner (not a column).
     public IList<BankAccount> BankAccounts { get; set; }
 }
