@@ -11,9 +11,6 @@ public abstract class BankAccount
 {
     private readonly List<AccountCashOperation> operations = new();
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BankAccount"/> class.
-    /// </summary>
     protected BankAccount(AccountOwner owner, string currencyCode, Func<string> numberGenerator)
     {
         // Main constructor: all other constructors end up here.
@@ -33,75 +30,44 @@ public abstract class BankAccount
         owner.Add(this);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BankAccount"/> class.
-    /// </summary>
     protected BankAccount(AccountOwner owner, string currencyCode, IUniqueNumberGenerator uniqueNumberGenerator)
         // Null check must happen here, before .Generate is accessed.
         : this(owner, currencyCode, (uniqueNumberGenerator ?? throw new ArgumentNullException(nameof(uniqueNumberGenerator))).Generate)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BankAccount"/> class with an initial balance.
-    /// </summary>
     protected BankAccount(AccountOwner owner, string currencyCode, Func<string> numberGenerator, decimal initialBalance)
-        : this(owner, currencyCode, numberGenerator)
+        // Check the balance before the main constructor registers the account at the owner.
+        : this(owner, currencyCode, EnsurePositiveInitialBalance(initialBalance, numberGenerator))
     {
         // The initial balance is a regular deposit, so it is recorded and earns bonus points.
         this.Deposit(initialBalance, DateTime.Now, "Initial balance");
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BankAccount"/> class with an initial balance.
-    /// </summary>
     protected BankAccount(AccountOwner owner, string currencyCode, IUniqueNumberGenerator uniqueNumberGenerator, decimal initialBalance)
-        : this(owner, currencyCode, uniqueNumberGenerator)
+        : this(owner, currencyCode, (uniqueNumberGenerator ?? throw new ArgumentNullException(nameof(uniqueNumberGenerator))).Generate, initialBalance)
     {
-        this.Deposit(initialBalance, DateTime.Now, "Initial balance");
     }
 
-    /// <summary>
-    /// Gets the account number.
-    /// </summary>
     public string Number { get; }
 
-    /// <summary>
-    /// Gets the account balance.
-    /// </summary>
     public decimal Balance { get; private set; }
 
-    /// <summary>
-    /// Gets the ISO currency code of the account.
-    /// </summary>
     public string CurrencyCode { get; }
 
-    /// <summary>
-    /// Gets the owner of the account.
-    /// </summary>
     public AccountOwner AccountOwner { get; }
 
-    /// <summary>
-    /// Gets the bonus points of the account.
-    /// </summary>
     public int BonusPoints { get; private set; }
 
-    /// <summary>
-    /// Gets the overdraft limit of the account.
-    /// </summary>
     protected abstract decimal Overdraft { get; }
 
-    /// <summary>
-    /// Returns all operations performed on the account.
-    /// </summary>
+    // Returns all operations performed on the account.
     public IList<AccountCashOperation> GetAllOperations()
     {
         return this.operations;
     }
 
-    /// <summary>
-    /// Deposits money to the account.
-    /// </summary>
+    // Deposits money to the account.
     public void Deposit(decimal amount, DateTime date, string note)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(amount);
@@ -112,9 +78,7 @@ public abstract class BankAccount
         this.BonusPoints += this.CalculateDepositRewardPoints(amount);
     }
 
-    /// <summary>
-    /// Withdraws money from the account.
-    /// </summary>
+    // Withdraws money from the account.
     public void Withdraw(decimal amount, DateTime date, string note)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(amount);
@@ -132,9 +96,7 @@ public abstract class BankAccount
         this.BonusPoints += this.CalculateWithdrawRewardPoints(amount);
     }
 
-    /// <summary>
-    /// Returns a text description of the account.
-    /// </summary>
+    // Returns a text description of the account.
     public override string ToString()
     {
         return string.Create(
@@ -142,13 +104,15 @@ public abstract class BankAccount
             $"{this.Overdraft} {this.AccountOwner} No:{this.Number}. Balance: {this.Balance}{this.CurrencyCode}.\n");
     }
 
-    /// <summary>
-    /// Calculates bonus points for a deposit.
-    /// </summary>
     protected abstract int CalculateDepositRewardPoints(decimal amount);
 
-    /// <summary>
-    /// Calculates bonus points for a withdrawal.
-    /// </summary>
     protected abstract int CalculateWithdrawRewardPoints(decimal amount);
+
+    // Runs inside the constructor chain, so an invalid balance fails before anything is changed.
+    private static Func<string> EnsurePositiveInitialBalance(decimal initialBalance, Func<string> numberGenerator)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(initialBalance);
+
+        return numberGenerator;
+    }
 }
