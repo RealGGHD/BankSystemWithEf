@@ -7,9 +7,6 @@ namespace BankSystem.Services.Models;
 /// </summary>
 public class AccountCashOperation
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AccountCashOperation"/> class.
-    /// </summary>
     public AccountCashOperation(decimal amount, DateTime date, string note)
     {
         this.Amount = amount;
@@ -17,24 +14,13 @@ public class AccountCashOperation
         this.Note = note;
     }
 
-    /// <summary>
-    /// Gets the amount of the operation.
-    /// </summary>
     public decimal Amount { get; }
 
-    /// <summary>
-    /// Gets the date and time of the operation.
-    /// </summary>
     public DateTime Date { get; }
 
-    /// <summary>
-    /// Gets the note of the operation.
-    /// </summary>
     public string Note { get; }
 
-    /// <summary>
-    /// Returns a text description of the operation.
-    /// </summary>
+    // Returns a text description of the operation.
     public override string ToString()
     {
         // Negative amount is a debit; positive or zero is a credit.
