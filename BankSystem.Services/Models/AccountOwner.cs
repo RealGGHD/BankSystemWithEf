@@ -62,7 +62,9 @@ public class AccountOwner
     // Returns the owner's full name and email.
     public override string ToString()
     {
-        return $"{this.FirstName} {this.LastName}, {this.Email}.";
+        string answer = $"{this.FirstName} {this.LastName}, {this.Email}.";
+
+        return answer;
     }
 
     // Adds an account to the owner's accounts.
