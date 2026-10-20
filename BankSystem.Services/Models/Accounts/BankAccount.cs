@@ -31,8 +31,8 @@ public abstract class BankAccount
     }
 
     protected BankAccount(AccountOwner owner, string currencyCode, IUniqueNumberGenerator uniqueNumberGenerator)
-        // Null check must happen here, before .Generate is accessed.
-        : this(owner, currencyCode, (uniqueNumberGenerator ?? throw new ArgumentNullException(nameof(uniqueNumberGenerator))).Generate)
+        // Turns the generator object into a function and passes it to the main constructor.
+        : this(owner, currencyCode, ToNumberGenerator(uniqueNumberGenerator))
     {
     }
 
@@ -45,7 +45,8 @@ public abstract class BankAccount
     }
 
     protected BankAccount(AccountOwner owner, string currencyCode, IUniqueNumberGenerator uniqueNumberGenerator, decimal initialBalance)
-        : this(owner, currencyCode, (uniqueNumberGenerator ?? throw new ArgumentNullException(nameof(uniqueNumberGenerator))).Generate, initialBalance)
+        // Same conversion, then the constructor above checks and deposits the initial balance.
+        : this(owner, currencyCode, ToNumberGenerator(uniqueNumberGenerator), initialBalance)
     {
     }
 
@@ -99,14 +100,24 @@ public abstract class BankAccount
     // Returns a text description of the account.
     public override string ToString()
     {
-        return string.Create(
+        string answer = string.Create(
             CultureInfo.InvariantCulture,
             $"{this.Overdraft} {this.AccountOwner} No:{this.Number}. Balance: {this.Balance}{this.CurrencyCode}.\n");
+
+        return answer;
     }
 
     protected abstract int CalculateDepositRewardPoints(decimal amount);
 
     protected abstract int CalculateWithdrawRewardPoints(decimal amount);
+
+    // Runs inside the constructor chain, so the null check happens before .Generate is accessed.
+    private static Func<string> ToNumberGenerator(IUniqueNumberGenerator uniqueNumberGenerator)
+    {
+        ArgumentNullException.ThrowIfNull(uniqueNumberGenerator);
+
+        return uniqueNumberGenerator.Generate;
+    }
 
     // Runs inside the constructor chain, so an invalid balance fails before anything is changed.
     private static Func<string> EnsurePositiveInitialBalance(decimal initialBalance, Func<string> numberGenerator)
