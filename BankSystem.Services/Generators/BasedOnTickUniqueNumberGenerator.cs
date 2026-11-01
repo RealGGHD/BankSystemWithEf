@@ -10,6 +10,9 @@ public class BasedOnTickUniqueNumberGenerator : IUniqueNumberGenerator
 {
     private readonly DateTime startingPoint;
 
+    // Last issued tick value; shared by all threads that use this generator.
+    private long lastTicks = long.MinValue;
+
     public BasedOnTickUniqueNumberGenerator(DateTime startingPoint)
     {
         this.startingPoint = startingPoint;
@@ -20,7 +23,19 @@ public class BasedOnTickUniqueNumberGenerator : IUniqueNumberGenerator
     {
         // Taken on every call, so consecutive calls get different values.
         long elapsedTicks = (DateTime.Now - this.startingPoint).Ticks;
-        string answer = elapsedTicks.ToString(CultureInfo.InvariantCulture).GenerateHash();
+        long previous;
+        long next;
+
+        // Two calls within the same tick would collide, so each value must be greater than the last one.
+        // CompareExchange saves it only if no other thread changed lastTicks in between; otherwise retry.
+        do
+        {
+            previous = Interlocked.Read(ref this.lastTicks);
+            next = Math.Max(elapsedTicks, previous + 1);
+        }
+        while (Interlocked.CompareExchange(ref this.lastTicks, next, previous) != previous);
+
+        string answer = next.ToString(CultureInfo.InvariantCulture).GenerateHash();
 
         return answer;
     }

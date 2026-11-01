@@ -25,8 +25,9 @@ public class SimpleGenerator : IUniqueNumberGenerator
     // Generates the next sequential number as a hash.
     public string Generate()
     {
-        this.counter += 1;
-        string answer = this.counter.ToString(CultureInfo.InvariantCulture).GenerateHash();
+        // Atomic increment: parallel threads never get the same number.
+        int next = Interlocked.Increment(ref this.counter);
+        string answer = next.ToString(CultureInfo.InvariantCulture).GenerateHash();
 
         return answer;
     }
