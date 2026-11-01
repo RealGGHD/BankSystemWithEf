@@ -19,5 +19,5 @@ public class CurrencyCode
     public string CurrenciesCode { get; set; }
 
     // Navigation to all accounts in this currency (not a column).
-    public IList<BankAccount> BankAccounts { get; set; }
+    public IList<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();
 }

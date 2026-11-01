@@ -23,5 +23,5 @@ public class AccountOwner
     public string Email { get; set; }
 
     // Navigation to all accounts of this owner (not a column).
-    public IList<BankAccount> BankAccounts { get; set; }
+    public IList<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();
 }
